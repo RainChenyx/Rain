@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的GitHub笔记网页</title>
     <style>
-        /* 保留原有所有样式，此处省略（和之前的样式完全一致） */
-        * {
+        {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -111,6 +110,25 @@
             position: relative;
             overflow: hidden;
             line-height: 1.7;
+            text-decoration: none; /* 新增：去除链接下划线 */
+            color: inherit; /* 新增：继承文字颜色 */
+        }
+        /* 新增：跳转卡片的hover提示 */
+        .note-card.link-card::after {
+            content: '→ 点击查看详情';
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #4a6cf7;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .dark-mode .note-card.link-card::after {
+            color: #8ab4f8;
+        }
+        .note-card.link-card:hover::after {
+            opacity: 1;
         }
         .dark-mode .note-card {
             background-color: #2c2c44;
@@ -192,8 +210,8 @@
             font-size: 1rem;
             cursor: pointer;
             box-shadow: 0 3px 10px rgba(74, 108, 247, 0.3);
-            text-decoration: none; /* 新增：去除链接下划线 */
-            text-align: center; /* 新增：文字居中 */
+            text-decoration: none;
+            text-align: center;
         }
         .add-note-btn:hover {
             background-color: #3a5ce7;
@@ -230,21 +248,16 @@
     </style>
 </head>
 <body>
-    <!-- 明暗模式切换按钮 -->
     <button class="mode-toggle" id="modeToggle">🌙 切换暗色模式</button>
 
-    <!-- 页面头部 -->
     <div class="header">
         <h1>📝 我的编程笔记</h1>
         <p>GitHub Pages 托管 | 动态交互版</p>
     </div>
 
-    <!-- 笔记容器 -->
     <div class="notes-container">
-        <!-- 新增笔记按钮：改为链接跳转 -->
         <a href="note-editor.html" class="add-note-btn">➕ 添加新笔记</a>
 
-        <!-- 笔记分类1：计算机基础 -->
         <div class="category-title" id="category1">
             <span>💻 计算机 基础</span>
             <span class="toggle-icon" id="toggle1">▼</span>
@@ -258,37 +271,13 @@
                 <h3>Docker</h3>
                 <p>Docker相关知识点</p>
             </div>
-            <div class="note-card">
+            <!-- 修改：服务器配置卡片改为跳转链接 -->
+            <a href="server-config.html" class="note-card link-card">
                 <h3>服务器配置</h3>
-                <p class="sub-title">Kaggle（每周30小时免费使用）</p>
-                <p class="quote">在顶部选择GPU，建议选择T4x2，每周有30小时免费时间</p>
-                <p class="quote">上传数据集，可永久保存在Kaggle服务器中，或者选择别人上传的数据集</p>
-                <p class="quote">建议每运行一个任务都保存该版本，如果造成网页异常时，最终还是可以下载输出结果</p>
-                <p class="quote">代码写在Jupyter中，如需下载pip包则输入以下命令，Kaggle没有终端，因此运行模型有点困难</p>
-                <p class="code-block">!pip install xxx</p>
-
-                <p class="sub-title">AutoDL（平均￥1.5 / h 付费使用）</p>
-                <p class="quote">数据集可以提前上传好放Auto Panel或者使用SSH远程管理软件进行上传（XShell、BitviseSSH）</p>
-                <p class="quote">配置环境先进入虚拟环境</p>
-                <p class="code-block">source /root/.virtualenvs/YOLO11_new/bin/</p>
-                <p class="quote">配置 CUDA 环境变量，在终端执行以下命令，将 CUDA 的库路径添加到系统环境变量</p>
-                <p class="code-block"># 添加CUDA库路径（AutoDL的CUDA默认安装在/usr/local/cuda）
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-export PATH=/usr/local/cuda/bin:$PATH
-
-# 验证CUDA路径是否生效
-echo $LD_LIBRARY_PATH  # 输出应包含/usr/local/cuda/lib64
-nvcc -V  # 应正常显示CUDA版本</p>
-                <p class="quote">激活xxx虚拟环境</p>
-                <p class="code-block">source /root/.virtualenvs/xxx/bin/activate</p>
-                <p class="quote">转到YOLO项目目录</p>
-                <p class="code-block">cd /root/autodl-tmp/YOLO</p>
-                <p class="quote">运行python文件</p>
-                <p class="code-block">python xxx.py  # 后面可以跟参数 — —</p>
-            </div>
+                <p>包含Kaggle（免费）和AutoDL（付费）的服务器配置教程</p>
+            </a>
         </div>
 
-        <!-- 笔记分类2：Git 常用命令 -->
         <div class="category-title" id="category2">
             <span>🔧 Git 常用命令</span>
             <span class="toggle-icon" id="toggle2">▼</span>
@@ -310,7 +299,7 @@ nvcc -V  # 应正常显示CUDA版本</p>
     </div>
 
     <script>
-        // 1. 明暗模式切换功能
+        // 保留原有所有JS逻辑
         const modeToggle = document.getElementById('modeToggle');
         const body = document.body;
 
@@ -321,7 +310,6 @@ nvcc -V  # 应正常显示CUDA版本</p>
                 : '🌙 切换暗色模式';
         });
 
-        // 2. 笔记分类折叠/展开功能
         function initCategoryToggle(categoryId, toggleId, listId) {
             const category = document.getElementById(categoryId);
             const toggle = document.getElementById(toggleId);
@@ -337,14 +325,12 @@ nvcc -V  # 应正常显示CUDA版本</p>
         initCategoryToggle('category1', 'toggle1', 'list1');
         initCategoryToggle('category2', 'toggle2', 'list2');
 
-        // 3. 加载本地存储的笔记（新增核心逻辑）
         function loadSavedNotes() {
             const savedNotes = localStorage.getItem('customNotes');
             if (savedNotes) {
                 const notes = JSON.parse(savedNotes);
                 const list1 = document.getElementById('list1');
                 
-                // 遍历保存的笔记，添加到卡片列表
                 notes.forEach(note => {
                     const newNote = document.createElement('div');
                     newNote.className = 'note-card';
@@ -352,13 +338,11 @@ nvcc -V  # 应正常显示CUDA版本</p>
                         <h3>${note.title}</h3>
                         <p>${note.content}</p>
                     `;
-                    // 插入到列表最前面
                     list1.insertBefore(newNote, list1.firstChild);
                 });
             }
         }
 
-        // 页面加载时执行
         window.onload = function() {
             loadSavedNotes();
         };
