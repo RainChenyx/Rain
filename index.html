@@ -3,25 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的GitHub静态网页</title>
+    <title>我的GitHub笔记网页</title>
     <style>
+        /* 全局样式 + 平滑过渡 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease; /* 所有元素添加平滑过渡，实现动态效果 */
+        }
+
+        /* 亮色/暗色模式基础样式 */
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-            background-color: #f0f8ff;
-        }
-        h1 {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f8f9fa;
             color: #2c3e50;
+            padding: 20px;
+            min-height: 100vh;
         }
-        p {
-            color: #34495e;
-            font-size: 18px;
+
+        body.dark-mode {
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+
+        /* 页面头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease; /* 标题淡入下滑动画 */
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.3s both; /* 延迟淡入上滑 */
+        }
+
+        /* 模式切换按钮 */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 50px;
+            background-color: #4a6cf7;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .mode-toggle:hover {
+            background-color: #3a5ce7;
+            transform: scale(1.05); /* 鼠标悬浮放大 */
+        }
+
+        /* 笔记分类容器 */
+        .notes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 笔记分类标题（可折叠） */
+        .category-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .dark-mode .category-title {
+            background-color: #2c2c44;
+        }
+
+        .category-title:hover {
+            background-color: #dee2e6;
+        }
+
+        .dark-mode .category-title:hover {
+            background-color: #383850;
+        }
+
+        .toggle-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.rotate {
+            transform: rotate(180deg); /* 折叠时旋转图标 */
+        }
+
+        /* 笔记卡片列表 */
+        .notes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .notes-list.collapsed {
+            max-height: 0; /* 折叠时隐藏列表 */
+        }
+
+        /* 笔记卡片样式 + 动态效果 */
+        .note-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-mode .note-card {
+            background-color: #2c2c44;
+        }
+
+        /* 卡片悬浮动画：缩放 + 阴影加深 + 轻微上移 */
+        .note-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 卡片左侧彩色装饰条 */
+        .note-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, #ff6b6b, #4ecdc4);
+        }
+
+        .note-card h3 {
+            margin-bottom: 10px;
+            color: #4a6cf7;
+            font-size: 1.1rem;
+        }
+
+        .dark-mode .note-card h3 {
+            color: #8ab4f8;
+        }
+
+        .note-card p {
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .note-card p {
+            color: #b0b0c0;
+        }
+
+        /* 新增笔记按钮 */
+        .add-note-btn {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4a6cf7;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(74, 108, 247, 0.3);
+        }
+
+        .add-note-btn:hover {
+            background-color: #3a5ce7;
+            transform: scale(1.05);
+        }
+
+        /* 动画定义 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .notes-list {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>🎉 你好，这是我的第一个GitHub静态网页！</h1>
-    <p>这个网页通过GitHub Pages免费托管～</p>
+    <!-- 明暗模式切换按钮 -->
+    <button class="mode-toggle" id="modeToggle">🌙 切换暗色模式</button>
+
+    <!-- 页面头部 -->
+    <div class="header">
+        <h1>📝 我的编程笔记</h1>
+        <p>GitHub Pages 托管 | 动态交互版</p>
+    </div>
+
+    <!-- 笔记容器 -->
+    <div class="notes-container">
+        <!-- 新增笔记按钮 -->
+        <button class="add-note-btn" id="addNoteBtn">➕ 添加新笔记</button>
+
+        <!-- 笔记分类1：Python基础 -->
+        <div class="category-title" id="category1">
+            <span>🐍 Python 基础</span>
+            <span class="toggle-icon" id="toggle1">▼</span>
+        </div>
+        <div class="notes-list" id="list1">
+            <div class="note-card">
+                <h3>变量与数据类型</h3>
+                <p>Python的基本数据类型：int、str、list、dict、bool。变量无需声明类型，直接赋值即可。</p>
+            </div>
+            <div class="note-card">
+                <h3>条件语句</h3>
+                <p>if/elif/else 语法，注意缩进（4个空格），条件判断后加冒号。</p>
+            </div>
+            <div class="note-card">
+                <h3>循环结构</h3>
+                <p>for循环遍历可迭代对象，while循环满足条件时执行，break/continue控制循环。</p>
+            </div>
+        </div>
+
+        <!-- 笔记分类2：Git 常用命令 -->
+        <div class="category-title" id="category2">
+            <span>🔧 Git 常用命令</span>
+            <span class="toggle-icon" id="toggle2">▼</span>
+        </div>
+        <div class="notes-list" id="list2">
+            <div class="note-card">
+                <h3>初始化仓库</h3>
+                <p>git init：创建本地仓库；git clone [url]：克隆远程仓库。</p>
+            </div>
+            <div class="note-card">
+                <h3>提交代码</h3>
+                <p>git add . → git commit -m "备注" → git push origin main。</p>
+            </div>
+            <div class="note-card">
+                <h3>查看状态</h3>
+                <p>git status：查看文件修改状态；git log：查看提交记录。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 明暗模式切换功能
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            // 切换按钮文字
+            if (body.classList.contains('dark-mode')) {
+                modeToggle.textContent = '☀️ 切换亮色模式';
+            } else {
+                modeToggle.textContent = '🌙 切换暗色模式';
+            }
+        });
+
+        // 2. 笔记分类折叠/展开功能
+        function initCategoryToggle(categoryId, toggleId, listId) {
+            const category = document.getElementById(categoryId);
+            const toggle = document.getElementById(toggleId);
+            const list = document.getElementById(listId);
+
+            category.addEventListener('click', () => {
+                list.classList.toggle('collapsed');
+                toggle.classList.toggle('rotate');
+                // 切换折叠/展开图标
+                toggle.textContent = list.classList.contains('collapsed') ? '▶' : '▼';
+            });
+        }
+
+        // 初始化两个分类的折叠功能
+        initCategoryToggle('category1', 'toggle1', 'list1');
+        initCategoryToggle('category2', 'toggle2', 'list2');
+
+        // 3. 动态添加新笔记功能
+        const addNoteBtn = document.getElementById('addNoteBtn');
+        const list1 = document.getElementById('list1');
+
+        addNoteBtn.addEventListener('click', () => {
+            // 创建新笔记卡片
+            const newNote = document.createElement('div');
+            newNote.className = 'note-card';
+            // 弹出输入框让用户输入笔记内容
+            const noteTitle = prompt('请输入笔记标题：', '新笔记');
+            const noteContent = prompt('请输入笔记内容：', '请填写笔记详情...');
+
+            if (noteTitle && noteContent) {
+                newNote.innerHTML = `
+                    <h3>${noteTitle}</h3>
+                    <p>${noteContent}</p>
+                `;
+                // 插入到第一个分类的笔记列表最前面
+                list1.insertBefore(newNote, list1.firstChild);
+                // 确保列表是展开状态
+                list1.classList.remove('collapsed');
+                document.getElementById('toggle1').textContent = '▼';
+                document.getElementById('toggle1').classList.remove('rotate');
+                
+                // 新卡片添加入场动画
+                newNote.style.opacity = 0;
+                newNote.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    newNote.style.opacity = 1;
+                    newNote.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        });
+    </script>
 </body>
 </html>
