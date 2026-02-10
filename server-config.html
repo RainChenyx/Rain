@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器配置 | 我的编程笔记</title>
+    <style>
+        /* 保持和主页面一致的样式体系 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        body.dark-mode {
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        /* 返回按钮 */
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 15px;
+            border: none;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.05);
+        }
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 50px;
+            background-color: #4a6cf7;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .mode-toggle:hover {
+            background-color: #3a5ce7;
+            transform: scale(1.05);
+        }
+        /* 详情内容容器 */
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            line-height: 1.8;
+        }
+        .dark-mode .content-container {
+            background-color: #2c2c44;
+        }
+        /* 内容样式 */
+        .content-container h2 {
+            color: #4a6cf7;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+        }
+        .dark-mode .content-container h2 {
+            color: #8ab4f8;
+            border-bottom-color: #383850;
+        }
+        .content-container .quote {
+            color: #6c757d;
+            padding-left: 15px;
+            border-left: 3px solid #ddd;
+            margin: 12px 0;
+            font-size: 1rem;
+        }
+        .dark-mode .content-container .quote {
+            color: #b0b0c0;
+            border-left-color: #444;
+        }
+        .content-container .code-block {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 12px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #333;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .dark-mode .content-container .code-block {
+            background-color: #282838;
+            color: #e0e0e0;
+        }
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .content-container {
+                padding: 20px;
+            }
+            .back-btn {
+                position: static;
+                transform: none;
+                display: block;
+                width: fit-content;
+                margin: 0 auto 15px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 切换暗色模式</button>
+
+    <div class="header">
+        <a href="index.html" class="back-btn">🔙 返回主页</a>
+        <h1>服务器配置详情</h1>
+        <p>Kaggle & AutoDL 配置教程</p>
+    </div>
+
+    <div class="content-container">
+        <h2>Kaggle（每周30小时免费使用）</h2>
+        <p class="quote">在顶部选择GPU，建议选择T4x2，每周有30小时免费时间</p>
+        <p class="quote">上传数据集，可永久保存在Kaggle服务器中，或者选择别人上传的数据集</p>
+        <p class="quote">建议每运行一个任务都保存该版本，如果造成网页异常时，最终还是可以下载输出结果</p>
+        <p class="quote">代码写在Jupyter中，如需下载pip包则输入以下命令，Kaggle没有终端，因此运行模型有点困难</p>
+        <p class="code-block">!pip install xxx</p>
+
+        <h2>AutoDL（平均￥1.5 / h 付费使用）</h2>
+        <p class="quote">数据集可以提前上传好放Auto Panel或者使用SSH远程管理软件进行上传（XShell、BitviseSSH）</p>
+        <p class="quote">配置环境先进入虚拟环境</p>
+        <p class="code-block">source /root/.virtualenvs/YOLO11_new/bin/</p>
+        <p class="quote">配置 CUDA 环境变量，在终端执行以下命令，将 CUDA 的库路径添加到系统环境变量</p>
+        <p class="code-block"># 添加CUDA库路径（AutoDL的CUDA默认安装在/usr/local/cuda）
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export PATH=/usr/local/cuda/bin:$PATH
+
+# 验证CUDA路径是否生效
+echo $LD_LIBRARY_PATH  # 输出应包含/usr/local/cuda/lib64
+nvcc -V  # 应正常显示CUDA版本</p>
+        <p class="quote">激活xxx虚拟环境</p>
+        <p class="code-block">source /root/.virtualenvs/xxx/bin/activate</p>
+        <p class="quote">转到YOLO项目目录</p>
+        <p class="code-block">cd /root/autodl-tmp/YOLO</p>
+        <p class="quote">运行python文件</p>
+        <p class="code-block">python xxx.py  # 后面可以跟参数 — —</p>
+    </div>
+
+    <script>
+        // 明暗模式切换（和主页面保持一致）
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+
+        // 读取主页面的模式状态，保持同步
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+            modeToggle.textContent = '☀️ 切换亮色模式';
+        }
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark); // 保存模式到本地
+            modeToggle.textContent = isDark ? '☀️ 切换亮色模式' : '🌙 切换暗色模式';
+        });
+    </script>
+</body>
+</html>
