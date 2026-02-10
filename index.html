@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的GitHub笔记网页</title>
     <style>
-        /* 全局样式 + 平滑过渡 */
+        /* 保留原有所有样式，此处省略（和之前的样式完全一致） */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease; /* 所有元素添加平滑过渡，实现动态效果 */
+            transition: all 0.3s ease;
         }
-
-        /* 亮色/暗色模式基础样式 */
         body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
             background-color: #f8f9fa;
@@ -21,13 +19,10 @@
             padding: 20px;
             min-height: 100vh;
         }
-
         body.dark-mode {
             background-color: #1a1a2e;
             color: #e0e0e0;
         }
-
-        /* 页面头部 */
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -37,20 +32,16 @@
             color: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            animation: fadeInDown 1s ease; /* 标题淡入下滑动画 */
+            animation: fadeInDown 1s ease;
         }
-
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
-            animation: fadeInUp 1s ease 0.3s both; /* 延迟淡入上滑 */
+            animation: fadeInUp 1s ease 0.3s both;
         }
-
-        /* 模式切换按钮 */
         .mode-toggle {
             position: fixed;
             top: 20px;
@@ -63,19 +54,14 @@
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
-
         .mode-toggle:hover {
             background-color: #3a5ce7;
-            transform: scale(1.05); /* 鼠标悬浮放大 */
+            transform: scale(1.05);
         }
-
-        /* 笔记分类容器 */
         .notes-container {
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        /* 笔记分类标题（可折叠） */
         .category-title {
             display: flex;
             align-items: center;
@@ -88,44 +74,34 @@
             font-size: 1.2rem;
             font-weight: 600;
         }
-
         .dark-mode .category-title {
             background-color: #2c2c44;
         }
-
         .category-title:hover {
             background-color: #dee2e6;
         }
-
         .dark-mode .category-title:hover {
             background-color: #383850;
         }
-
         .toggle-icon {
             font-size: 1.5rem;
             transition: transform 0.3s ease;
         }
-
         .toggle-icon.rotate {
-            transform: rotate(180deg); /* 折叠时旋转图标 */
+            transform: rotate(180deg);
         }
-
-        /* 笔记卡片列表 */
         .notes-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
             max-height: 1000px;
             overflow: hidden;
             transition: max-height 0.5s ease;
         }
-
         .notes-list.collapsed {
-            max-height: 0; /* 折叠时隐藏列表 */
+            max-height: 0;
         }
-
-        /* 笔记卡片样式 + 动态效果 */
         .note-card {
             background-color: white;
             border-radius: 10px;
@@ -134,19 +110,15 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            line-height: 1.7;
         }
-
         .dark-mode .note-card {
             background-color: #2c2c44;
         }
-
-        /* 卡片悬浮动画：缩放 + 阴影加深 + 轻微上移 */
         .note-card:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
-
-        /* 卡片左侧彩色装饰条 */
         .note-card::before {
             content: '';
             position: absolute;
@@ -156,28 +128,59 @@
             width: 4px;
             background: linear-gradient(to bottom, #ff6b6b, #4ecdc4);
         }
-
         .note-card h3 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #4a6cf7;
             font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
         }
-
         .dark-mode .note-card h3 {
             color: #8ab4f8;
+            border-bottom-color: #383850;
         }
-
         .note-card p {
             color: #6c757d;
-            line-height: 1.6;
             font-size: 0.95rem;
+            margin-bottom: 12px;
         }
-
         .dark-mode .note-card p {
             color: #b0b0c0;
         }
-
-        /* 新增笔记按钮 */
+        .note-card .quote {
+            color: #888;
+            padding-left: 12px;
+            border-left: 2px solid #ddd;
+            margin: 8px 0;
+        }
+        .dark-mode .note-card .quote {
+            color: #a0a0b0;
+            border-left-color: #444;
+        }
+        .note-card .code-block {
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin: 8px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #333;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .dark-mode .note-card .code-block {
+            background-color: #282838;
+            color: #e0e0e0;
+        }
+        .note-card .sub-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 15px 0 8px 0;
+        }
+        .dark-mode .note-card .sub-title {
+            color: #ddd;
+        }
         .add-note-btn {
             display: block;
             margin: 0 auto 30px;
@@ -189,14 +192,13 @@
             font-size: 1rem;
             cursor: pointer;
             box-shadow: 0 3px 10px rgba(74, 108, 247, 0.3);
+            text-decoration: none; /* 新增：去除链接下划线 */
+            text-align: center; /* 新增：文字居中 */
         }
-
         .add-note-btn:hover {
             background-color: #3a5ce7;
             transform: scale(1.05);
         }
-
-        /* 动画定义 */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -207,7 +209,6 @@
                 transform: translateY(0);
             }
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -218,8 +219,6 @@
                 transform: translateY(0);
             }
         }
-
-        /* 响应式适配 */
         @media (max-width: 768px) {
             .notes-list {
                 grid-template-columns: 1fr;
@@ -242,8 +241,8 @@
 
     <!-- 笔记容器 -->
     <div class="notes-container">
-        <!-- 新增笔记按钮 -->
-        <button class="add-note-btn" id="addNoteBtn">➕ 添加新笔记</button>
+        <!-- 新增笔记按钮：改为链接跳转 -->
+        <a href="note-editor.html" class="add-note-btn">➕ 添加新笔记</a>
 
         <!-- 笔记分类1：计算机基础 -->
         <div class="category-title" id="category1">
@@ -261,7 +260,31 @@
             </div>
             <div class="note-card">
                 <h3>服务器配置</h3>
-                <p>包含Kaggle和AutoDL等主流服务器配置。</p>
+                <p class="sub-title">Kaggle（每周30小时免费使用）</p>
+                <p class="quote">在顶部选择GPU，建议选择T4x2，每周有30小时免费时间</p>
+                <p class="quote">上传数据集，可永久保存在Kaggle服务器中，或者选择别人上传的数据集</p>
+                <p class="quote">建议每运行一个任务都保存该版本，如果造成网页异常时，最终还是可以下载输出结果</p>
+                <p class="quote">代码写在Jupyter中，如需下载pip包则输入以下命令，Kaggle没有终端，因此运行模型有点困难</p>
+                <p class="code-block">!pip install xxx</p>
+
+                <p class="sub-title">AutoDL（平均￥1.5 / h 付费使用）</p>
+                <p class="quote">数据集可以提前上传好放Auto Panel或者使用SSH远程管理软件进行上传（XShell、BitviseSSH）</p>
+                <p class="quote">配置环境先进入虚拟环境</p>
+                <p class="code-block">source /root/.virtualenvs/YOLO11_new/bin/</p>
+                <p class="quote">配置 CUDA 环境变量，在终端执行以下命令，将 CUDA 的库路径添加到系统环境变量</p>
+                <p class="code-block"># 添加CUDA库路径（AutoDL的CUDA默认安装在/usr/local/cuda）
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export PATH=/usr/local/cuda/bin:$PATH
+
+# 验证CUDA路径是否生效
+echo $LD_LIBRARY_PATH  # 输出应包含/usr/local/cuda/lib64
+nvcc -V  # 应正常显示CUDA版本</p>
+                <p class="quote">激活xxx虚拟环境</p>
+                <p class="code-block">source /root/.virtualenvs/xxx/bin/activate</p>
+                <p class="quote">转到YOLO项目目录</p>
+                <p class="code-block">cd /root/autodl-tmp/YOLO</p>
+                <p class="quote">运行python文件</p>
+                <p class="code-block">python xxx.py  # 后面可以跟参数 — —</p>
             </div>
         </div>
 
@@ -293,12 +316,9 @@
 
         modeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            // 切换按钮文字
-            if (body.classList.contains('dark-mode')) {
-                modeToggle.textContent = '☀️ 切换亮色模式';
-            } else {
-                modeToggle.textContent = '🌙 切换暗色模式';
-            }
+            modeToggle.textContent = body.classList.contains('dark-mode') 
+                ? '☀️ 切换亮色模式' 
+                : '🌙 切换暗色模式';
         });
 
         // 2. 笔记分类折叠/展开功能
@@ -310,48 +330,38 @@
             category.addEventListener('click', () => {
                 list.classList.toggle('collapsed');
                 toggle.classList.toggle('rotate');
-                // 切换折叠/展开图标
                 toggle.textContent = list.classList.contains('collapsed') ? '▶' : '▼';
             });
         }
 
-        // 初始化两个分类的折叠功能
         initCategoryToggle('category1', 'toggle1', 'list1');
         initCategoryToggle('category2', 'toggle2', 'list2');
 
-        // 3. 动态添加新笔记功能
-        const addNoteBtn = document.getElementById('addNoteBtn');
-        const list1 = document.getElementById('list1');
-
-        addNoteBtn.addEventListener('click', () => {
-            // 创建新笔记卡片
-            const newNote = document.createElement('div');
-            newNote.className = 'note-card';
-            // 弹出输入框让用户输入笔记内容
-            const noteTitle = prompt('请输入笔记标题：', '新笔记');
-            const noteContent = prompt('请输入笔记内容：', '请填写笔记详情...');
-
-            if (noteTitle && noteContent) {
-                newNote.innerHTML = `
-                    <h3>${noteTitle}</h3>
-                    <p>${noteContent}</p>
-                `;
-                // 插入到第一个分类的笔记列表最前面
-                list1.insertBefore(newNote, list1.firstChild);
-                // 确保列表是展开状态
-                list1.classList.remove('collapsed');
-                document.getElementById('toggle1').textContent = '▼';
-                document.getElementById('toggle1').classList.remove('rotate');
+        // 3. 加载本地存储的笔记（新增核心逻辑）
+        function loadSavedNotes() {
+            const savedNotes = localStorage.getItem('customNotes');
+            if (savedNotes) {
+                const notes = JSON.parse(savedNotes);
+                const list1 = document.getElementById('list1');
                 
-                // 新卡片添加入场动画
-                newNote.style.opacity = 0;
-                newNote.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    newNote.style.opacity = 1;
-                    newNote.style.transform = 'translateY(0)';
-                }, 50);
+                // 遍历保存的笔记，添加到卡片列表
+                notes.forEach(note => {
+                    const newNote = document.createElement('div');
+                    newNote.className = 'note-card';
+                    newNote.innerHTML = `
+                        <h3>${note.title}</h3>
+                        <p>${note.content}</p>
+                    `;
+                    // 插入到列表最前面
+                    list1.insertBefore(newNote, list1.firstChild);
+                });
             }
-        });
+        }
+
+        // 页面加载时执行
+        window.onload = function() {
+            loadSavedNotes();
+        };
     </script>
 </body>
 </html>
